@@ -1,72 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include "tokenizer.h"
 
 //declared typedef for node
 typedef struct node{
-	int key;
-	int value;
+	char *key;
+	char *value;
 	struct node *next;
 } node;
 
-//not sure if this needed, but just in case
-int mod (int x){
-	x = abs(x%10000);
-	return x;
-}
-
-//initialize the HashMap
-node** fill(struct node** HashMap){
-	for(int i = 0; i<10000; i++){
-		HashMap[i] = NULL;
-	}
-}
-
-//These should be all the functions needed for HashMap node stuff for now
-/*
-void nullinsert(struct node** HashMap, int x, int i){
-	struct node* newnode=(struct node*) malloc(sizeof(struct node));
-        newnode->value = x;
-        newnode->next = NULL;
-        HashMap[i] = newnode;
-}
-
-void insert(struct node** HashMap, int x){
-	int i = mod(x);
-	if(HashMap[i] == NULL){
-		nullinsert(HashMap, x, i);
-	}else{
-		struct node* temp = HashMap[i];
-		while(temp->next != NULL){
-			temp = temp->next;
-		}
-		struct node* newnode=(struct node*) malloc(sizeof(struct node));
-		newnode->value = x;
-		newnode->next = NULL;
-		temp->next = newnode;
-	}
-}
-
-int search(struct node** HashMap, int x){
-	int i = mod(x);
-	if(HashMap[i] == NULL){
-		return 0;
-	}else{
-		struct node* temp = HashMap[i];
-		while(temp != NULL){
-			if(temp->value == x){	
-				return 1;
-			}
-			temp = temp->next;
-		}
- 	}
- 	return 0;
-}
-*/
-
 int main(int argc, char *argv[]){
 
-	if(argc<2){
+	// Input only have 1 arg
+	if(argc !=  2){
 		printf("aids\n");
+		return 1;
 	}
 
 	char *aidsstring = argv[1];	
@@ -74,13 +24,65 @@ int main(int argc, char *argv[]){
 	
 	//int value = atoi(aidsstring);
 	//printf("%d\n", value);
+	
+	int hashLen = 10000;
 
-	struct node* HashMap[10000];
-	fill(HashMap);
+	// Allocate space for and initialize hashmap
+	node **HashMap = (node**) malloc(sizeof(node*) * hashLen);
+	initHash(HashMap, hashLen);
+	
+	insert
 
 
-
-	return 1;
+	return 0;
 }
 
+//function to hash our values
+int hash(char* key, size_t keyLen){
+	int x = 0;
+	for(int i = 0; i < keyLen; i++) x += key[i];
+	x = abs(x%10000);
+	return x;
+}
+
+
+//initialize HashMap
+void initHash(node **HashMap, int hashLen){
+	for(int i = 0; i<hashLen; i++){
+		HashMap[i] = NULL;
+	}
+}
+
+/* Hashmap insert
+ * Input: HashMap (node*), key (str), value to insert (str)
+ * Output: N/A
+ * Note: We do not account for duplicates
+*/
+void insert(node **HashMap, char *key, char *value){
+	int i = hash(key, strlen(key));
+	node *newNode = (node*) malloc(sizeof(node));
+	newNode->key = key;
+	newNode->value = value;
+
+	newNode->next = HashMap[i];
+	HashMap[i] = newNode;
+}
+
+/* HashMap Search
+ * Input: Hashmap (node*) , Hashmap key (str), size of key (size_t)
+ * Output: NULL if not found, node found otherwise
+*/
+node* search(node **HashMap, char *key, size_t size){
+	int i = hash(key, size);
+	if(HashMap[i] != NULL) {
+		node *temp = HashMap[i];
+		while(temp != NULL){
+			if(temp->key == key){	
+				return temp;
+			}
+			temp = temp->next;
+		}
+ 	}
+ 	return NULL;
+}
 
