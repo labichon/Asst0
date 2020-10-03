@@ -31,8 +31,57 @@ int main(int argc, char *argv[]){
 	node **HashMap = (node**) malloc(sizeof(node*) * hashLen);
 	initHash(HashMap, hashLen);
 	
-	insert
+	// Insert Special Characters
+	insert(HashMap, "(", "left parenthesis");
+	insert(HashMap, ")", "right parenthesis");
+	insert(HashMap, "[", "left bracket");
+	insert(HashMap, "]", "right bracket");
+	insert(HashMap, ".", "structure member");
+	insert(HashMap, "->", "structure pointer");
+	insert(HashMap, "sizeof", "sizeof");
+	insert(HashMap, ",", "comma");
+	insert(HashMap, "!", "negate");
+	insert(HashMap, "~", "1s complement");
+	insert(HashMap, ">>", "shift right");
+	insert(HashMap, "<<", "shift left");
+	insert(HashMap, "^", "bitwise XOR");
+	insert(HashMap, "|", "bitwise OR");
+	insert(HashMap, "++", "increment");
+	insert(HashMap, "--", "decrement");
+	insert(HashMap, "+", "addition");
+	insert(HashMap, "/", "division");
+	insert(HashMap, "||", "logical OR");
+	insert(HashMap, "&&", "logical AND");
+	insert(HashMap, "?","conditional true");
+	insert(HashMap, ":", "conditional false");
+	insert(HashMap, "==", "equality test");
+	insert(HashMap, "!=", "inequality test");
+	insert(HashMap, "<", "less than test");
+	insert(HashMap, ">", "greater than test");
+	insert(HashMap, "<=", "less than or equal test");
+	insert(HashMap, ">=", "greater than or equal test");
+	insert(HashMap, "=", "assignment");
+	insert(HashMap, "+=", "plus equals");
+	insert(HashMap, "-=", "minus equals");
+	insert(HashMap, "*=", "times equals");
+	insert(HashMap, "/=", "divide equals");
+	insert(HashMap, "%=", "mod equals");
+	insert(HashMap, ">>=", "shift right equals");
+	insert(HashMap, "<<=", "shift left equals");
+	insert(HashMap, "&=", "bitwise AND equals");
+	insert(HashMap, "^=", "bitwise XOR equals");
+	insert(HashMap, "|=", "bitwise OR equals");
+	insert(HashMap, "&", "AND/address operator");
+	insert(HashMap, "-", "minus/subtract operator");
+	insert(HashMap, "*", "multiply/dereference operator");
 
+
+	// Possibilities: Word, Hex, Dec, Oct, FP
+	// Precedence: Space > Special  (except '-' and '.' > Word
+	// > Hex > FP > Dec  > Oct
+	// Exceptions: Dec + '.' + Dec = Float
+	// Dec + '.' + Dec + 'e-' + Dec = Float
+	// 
 
 	return 0;
 }
