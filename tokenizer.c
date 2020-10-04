@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include "tokenizer.h"
 
+#define HASH_LEN 10000
+
 //declared typedef for node
 typedef struct node{
 	char *key;
@@ -20,12 +22,8 @@ int main(int argc, char *argv[]){
 	}
 
 	char *input = argv[1];	
-	//printf("%s\n", aidsstring);
 	
-	//int value = atoi(aidsstring);
-	//printf("%d\n", value);
-	
-	int hashLen = 10000;
+	int hashLen = HASH_LEN;
 	
 	// Allocate space for and initialize hashmap
 	node **HashMap = (node**) malloc(sizeof(node*) * hashLen);
@@ -118,20 +116,15 @@ int main(int argc, char *argv[]){
 				currType = Special;
 			} else if (input[i] == '0') { 
 				// Case '0': Possible Oct/Hex/Dec
-				if (input[i+1] >= '0' && input[i+1] < '8') {
-					// Octal
-					currType = Oct;
-					i++;
-					continue;
-				} else if ((input[i+1] == 'x'
+				if ((input[i+1] == 'x'
                                            || input[i+1] =='X') && isxdigit(input[i+2])) {
 					// Hexadecimal
 					currType = Hex;
 					i+=2;
 					continue;
 				} else {
-					// Decimal
-					currType = Dec;
+					// Octal
+					currType = Oct;
 				}
 			} else if (isdigit(input[i])) {
 				// Case Decimal
@@ -144,7 +137,7 @@ int main(int argc, char *argv[]){
 				return 1;
 			}
 		} else if (currType == Special) {
-			// Whole word isn't a special token
+			// Word isn't a special token, so go to next
 			next = 1;
 		} else if (currType == Word) {
 			if (!isalnum(input[i])) next = 1;
@@ -161,12 +154,10 @@ int main(int argc, char *argv[]){
 		} else if (currType == Float) {
 			// 3 cases: 1) 'e' or 'e-' 2) decimal char 3) word or special
 			if (input[i] == 'e' && (isdigit(input[i+1]))) {
-				// 1
 				currType = Exp;
 				i++;
 			} else if (input[i] == 'e' && (input[i+1] == '-' || input[i+1] == '+')
                                    && isdigit(input[i+2])) {
-				// 1
 				currType = Exp;
 				i += 2;
 			} else {
@@ -224,14 +215,14 @@ int main(int argc, char *argv[]){
 int hash(char* key, size_t keyLen){
 	int x = 0;
 	for(int i = 0; i < keyLen; i++) x += key[i];
-	x = abs(x%10000);
+	x = abs(x % HASH_LEN);
 	return x;
 }
 
 
 //initialize HashMap
 void initHash(node **HashMap, int hashLen){
-	for(int i = 0; i<hashLen; i++){
+	for(int i = 0; i < hashLen; i++){
 		HashMap[i] = NULL;
 	}
 }
@@ -292,6 +283,10 @@ char* getTypeStr(types type) {
 	}
 }
 
+/* Print a Linked List
+ * Input: Head of LL
+ * Output: n/a
+*/
 void printLL(node *head) {
 	for (node *curr = head; curr != NULL; curr = curr -> next) {
 		printf("%s: \"%s\"\n", curr -> value, curr -> key);
