@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
 		// Find whether we have a special char
 		node *specChar = search(HashMap, &input[i], 1);
 
-		
+		// Find whether or not double or single quotes are in the string
 		if (currType == DoubleQuotes) {
 			next = 1;
 		} else if (currType == SingleQuotes) {
