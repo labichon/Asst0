@@ -158,8 +158,7 @@ int main(int argc, char *argv[]){
 			next = 1;
 		} else if (currType == Word) {
 			if (!isalnum(input[i])) next = 1;
-		}	
-		else if (currType == Dec) {
+		}else if (currType == Dec) {
 			// Cases: 1) '.' 2) Decimal 3) Non-decimal
 			if (input[i] == '.' && isdigit(input[i+1])) {
 				currType = Float;
@@ -217,6 +216,7 @@ int main(int argc, char *argv[]){
 				// Copy type into next node
 				currType = None;
 				last = i;
+				free(newNode);
 			} else i++;
 		} else {
 			// Only increment i if we did not create a new node
@@ -224,7 +224,10 @@ int main(int argc, char *argv[]){
 		}
 	}
 	printLL(head);
-
+	//Free
+	free(curr->key);
+	free(head);
+	free(HashMap);
 	return 0;
 }
 
