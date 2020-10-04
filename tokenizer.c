@@ -11,8 +11,6 @@ typedef struct node{
 	struct node *next;
 } node;
 
-void printLL(node* head);
-
 int main(int argc, char *argv[]){
 
 	// Input only have 1 arg
@@ -29,8 +27,6 @@ int main(int argc, char *argv[]){
 	
 	int hashLen = 10000;
 	
-	printf("hi");
-
 	// Allocate space for and initialize hashmap
 	node **HashMap = (node**) malloc(sizeof(node*) * hashLen);
 	initHash(HashMap, hashLen);
@@ -79,14 +75,6 @@ int main(int argc, char *argv[]){
 	insert(HashMap, "-", "minus/subtract operator");
 	insert(HashMap, "*", "multiply/dereference operator");
 
-
-	// Possibilities: Word, Hex, Dec, Oct, FP
-	// Precedence: Space > Special  (except '-' and '.' > Word
-	// > Hex > FP > Dec  > Oct
-	// Exceptions: Dec + '.' + Dec = Float
-	// Dec + '.' + Dec + 'e-' + Dec = Float
-
-	
 	// Start list of tokens
 	node *head = (node*) malloc(sizeof(node));
 	head -> key = NULL;
@@ -107,12 +95,12 @@ int main(int argc, char *argv[]){
 
 		// Find whether full string is a special character
 		node *special = search(HashMap, &input[last], i - last + 1);
+		// Find whether we have a special char
 		node *specChar = search(HashMap, &input[i], 1);
 
 		if (isspace(input[i])) {
 			// If current character is whitespace
 			if (currType != None) {
-				// TODO:Set current node value and create a new node
 				next = 1;
 				i++;
 			} else {
@@ -162,7 +150,7 @@ int main(int argc, char *argv[]){
 			if (!isalnum(input[i])) next = 1;
 		}	
 		else if (currType == Dec) {
-			// Cases: 1) '.' 2) Word or Special 3) Decimal
+			// Cases: 1) '.' 2) Decimal 3) Non-decimal
 			if (input[i] == '.' && isdigit(input[i+1])) {
 				currType = Float;
 				i++;
@@ -187,7 +175,14 @@ int main(int argc, char *argv[]){
 		} else if (currType == Exp) {
 			if (!isdigit(input[i])) next = 1;
 		} else if (currType == Oct) {
-			if (input[i] > '7' || input[i] < '0') next = 1;
+			if (input[i] > '7' || input[i] < '0') {
+				if (isdigit(input[i])) currType = Dec;
+				else if (input[i] == '.' && isdigit(input[i+1])) {
+					currType = Float;
+					i++;
+				}
+				else next = 1;
+			}
 		} else if (currType == Hex) {
 			if (!isxdigit(input[i])) next = 1;
 		}
@@ -214,12 +209,14 @@ int main(int argc, char *argv[]){
 			last = i;
 
 		} else if (input[i+1] == '\0') {
+			// Copy into last node
 			curr -> key = malloc(++i - last + 1);
 			memcpy(curr -> key, &input[last], i - last);
 			(curr -> key)[i-last] = '\0';
 			if (currType != Special) curr -> value = getTypeStr(currType);
 
 		} else {
+			// Only increment i if we did not create a new node
 			i++;
 		}
 	}
@@ -296,7 +293,7 @@ char* getTypeStr(types type) {
 	}
 }
 
-void printLL(node* head) {
+void printLL(node *head) {
 	for (node *curr = head; curr != NULL; curr = curr -> next) {
 		printf("%s: %s\n", curr -> value, curr -> key);
 	}
