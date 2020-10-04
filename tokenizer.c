@@ -196,7 +196,10 @@ int main(int argc, char *argv[]){
 
 		if (next || input[i+1] == '\0') {
 			// Copy relevant info to current node and create a new one
-			
+			if (input[i+1] == '\0') {
+				i++;
+			}	
+
 			// Copy chars from last to i into node
 			curr -> key = malloc(i - last + 1);
 			memcpy(curr -> key, &input[last], i - last);
@@ -204,7 +207,7 @@ int main(int argc, char *argv[]){
 
 			if (currType != Special) curr -> value = getTypeStr(currType);
 
-			if (input[i+1] != '\0') {
+			if (input[i] != '\0') {
 				// Not last node, create next
 				node *newNode = (node*) malloc(sizeof(node));
 				newNode -> key = NULL;
@@ -216,17 +219,19 @@ int main(int argc, char *argv[]){
 				// Copy type into next node
 				currType = None;
 				last = i;
-				free(newNode);
-			} else i++;
+			}
 		} else {
 			// Only increment i if we did not create a new node
 			i++;
 		}
 	}
 	printLL(head);
-	//Free
-	free(curr->key);
-	free(head);
+	
+	// Free memory
+	freeLL(head, 1);
+	for (int i = 0; i < hashLen; i++) {
+		freeLL(HashMap[i], 0);
+	}
 	free(HashMap);
 	return 0;
 }
@@ -299,9 +304,9 @@ char* getTypeStr(types type) {
 		case Oct:
 			return "octal integer";
 		case SingleQuotes:
-			return "single quotes";
+			return "string";
 		case DoubleQuotes:
-			return "double quotes";
+			return "string";
 		default:
 			return NULL;
 	}
@@ -315,4 +320,18 @@ void printLL(node *head) {
 	for (node *curr = head; curr != NULL; curr = curr -> next) {
 		printf("%s: \"%s\"\n", curr -> value, curr -> key);
 	}
+}
+
+/* Free the nodes of a LL
+ * Input: LL head, int (1 if freeing string, 0 otherwise)
+ * Output: n/a
+*/
+void freeLL(node *head, int hasStr) {
+	while (head != NULL) {
+		if (hasStr) free(head -> key);
+		node* toFree = head;
+		head = head -> next;
+		free(toFree);
+	}
+
 }
