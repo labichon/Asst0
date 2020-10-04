@@ -17,11 +17,11 @@ int main(int argc, char *argv[]){
 
 	// Input only have 1 arg
 	if(argc !=  2){
-		printf("aids\n");
+		printf("error\n");
 		return 1;
 	}
 
-	char *input = argv[1];	
+	char *input = argv[1];
 	
 	int hashLen = HASH_LEN;
 	
@@ -96,7 +96,24 @@ int main(int argc, char *argv[]){
 		// Find whether we have a special char
 		node *specChar = search(HashMap, &input[i], 1);
 
-		if (isspace(input[i])) {
+		
+		if (currType == DoubleQuotes) {
+			next = 1;
+		} else if (currType == SingleQuotes) {
+			next = 1;
+		} else if (input[i] == '\"') {
+			currType = DoubleQuotes;
+			i++;
+			while (input[i] != '\"') {
+				i++;
+			}
+		} else if (input[i] == '\'') {
+			currType = SingleQuotes;
+			i++;
+			while (input[i] != '\'') {
+				i++;
+			}
+		} else if (isspace(input[i])) {
 			// If current character is whitespace
 			if (currType != None) {
 				next = 1;
@@ -278,6 +295,10 @@ char* getTypeStr(types type) {
 			return "hexadecimal integer";
 		case Oct:
 			return "octal integer";
+		case SingleQuotes:
+			return "single quotes";
+		case DoubleQuotes:
+			return "double quotes";
 		default:
 			return NULL;
 	}

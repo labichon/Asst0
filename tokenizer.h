@@ -11,7 +11,9 @@ typedef enum {
 	Float,
 	Dec,
 	Hex,
-	Oct
+	Oct,
+	SingleQuotes,
+	DoubleQuotes
 } types;
 int hash(char*, size_t);
 void initHash(node**, int);
