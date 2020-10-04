@@ -209,7 +209,7 @@ int main(int argc, char *argv[]){
 				// Copy type into next node
 				currType = None;
 				last = i;
-			}
+			} else i++;
 		} else {
 			// Only increment i if we did not create a new node
 			i++;
