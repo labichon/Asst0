@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
 			curr -> value = special -> value;
 			currType = Special;
 		} else if (currType == None) {
-			// Current type not yet known (no chars)
+			// Current type not yet known (new token)
 			// Cases: Special Char, '0', Decimal, Word
 			if (specChar != NULL) {
 				// Case Special char
@@ -144,6 +144,7 @@ int main(int argc, char *argv[]){
 				return 1;
 			}
 		} else if (currType == Special) {
+			// Whole word isn't a special token
 			next = 1;
 		} else if (currType == Word) {
 			if (!isalnum(input[i])) next = 1;
@@ -186,7 +187,7 @@ int main(int argc, char *argv[]){
 			if (!isxdigit(input[i])) next = 1;
 		}
 
-		if (next) {
+		if (next || input[i+1] == '\0') {
 			// Copy relevant info to current node and create a new one
 			
 			// Copy chars from last to i into node
@@ -196,24 +197,19 @@ int main(int argc, char *argv[]){
 
 			if (currType != Special) curr -> value = getTypeStr(currType);
 
-			node *newNode = (node*) malloc(sizeof(node));
-			newNode -> key = NULL;
-			newNode -> value = NULL;
-			newNode -> next = NULL;
-			curr -> next = newNode;
-			curr = curr -> next;
+			if (input[i+1] != '\0') {
+				// Not last node, create next
+				node *newNode = (node*) malloc(sizeof(node));
+				newNode -> key = NULL;
+				newNode -> value = NULL;
+				newNode -> next = NULL;
+				curr -> next = newNode;
+				curr = curr -> next;
 
-			// Copy type into next node
-			currType = None;
-			last = i;
-
-		} else if (input[i+1] == '\0') {
-			// Copy into last node
-			curr -> key = malloc(++i - last + 1);
-			memcpy(curr -> key, &input[last], i - last);
-			(curr -> key)[i-last] = '\0';
-			if (currType != Special) curr -> value = getTypeStr(currType);
-
+				// Copy type into next node
+				currType = None;
+				last = i;
+			}
 		} else {
 			// Only increment i if we did not create a new node
 			i++;
@@ -273,6 +269,10 @@ node* search(node **HashMap, char *key, size_t size){
  	return NULL;
 }
 
+/* Get Type From String
+ * Input: type (types)
+ * Output: String description of type
+*/
 char* getTypeStr(types type) {
 	switch(type) {
 		case Word:
