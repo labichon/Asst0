@@ -102,7 +102,6 @@ int main(int argc, char *argv[]){
 			// If current character is whitespace
 			if (currType != None) {
 				next = 1;
-				i++;
 			} else {
 				last = i+1;
 			}
@@ -295,6 +294,6 @@ char* getTypeStr(types type) {
 
 void printLL(node *head) {
 	for (node *curr = head; curr != NULL; curr = curr -> next) {
-		printf("%s: %s\n", curr -> value, curr -> key);
+		printf("%s: \"%s\"\n", curr -> value, curr -> key);
 	}
 }
