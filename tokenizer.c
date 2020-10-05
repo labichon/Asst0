@@ -170,7 +170,6 @@ int main(int argc, char *argv[]){
 		} else if (currType == Word) {
 			if (!isalnum(input[i])) next = 1;
 		}else if (currType == Dec) {
-			printf("%c", input[i]);
 			// Cases: 1) '.' 2) Decimal 3) Non-decimal
 			if (input[i] == '.' && isdigit(input[i+1])) {
 				currType = Float;
