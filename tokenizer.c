@@ -111,9 +111,11 @@ int main(int argc, char *argv[]){
 		} else if (currType == SingleQuotes) {
 			if (input[i] == '\'') next = 1;
 		} else if (input[i] == '\"') {
-			currType = DoubleQuotes;
+			if (currType != None) next = 1;
+			else currType = DoubleQuotes;
 		} else if (input[i] == '\'') {
-			currType = SingleQuotes;
+			if (currType != None) next = 1;
+			else currType = SingleQuotes;
 		} else if (isspace(input[i])) {
 			// If current character is whitespace
 			if (currType != None) {
