@@ -37,3 +37,15 @@ decimal: "0"
 word: "ca"
 floating point: "12.2"
 
+
+./tokenizer "'hate to see it'"
+string: "'hate to see it'"
+
+
+./tokenizer "\"hate to see it\""
+string: ""hate to see it""
+
+
+./tokenizer "if"
+keyword: "if"
+
