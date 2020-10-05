@@ -13,7 +13,9 @@ typedef enum {
 	Hex,
 	Oct,
 	SingleQuotes,
-	DoubleQuotes
+	DoubleQuotes,
+	Comment,
+	MultiComment
 } types;
 int hash(char*, size_t);
 void initHash(node**, int);

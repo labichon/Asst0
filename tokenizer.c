@@ -95,6 +95,7 @@ int main(int argc, char *argv[]){
 	
 	// Loop until end of input string
 	int i = 0;
+
 	while (input[i] != '\0') {
 		
 		//printf("Input: %c, Type: %d\n", input[i], currType);
@@ -104,9 +105,19 @@ int main(int argc, char *argv[]){
 		node *special = search(HashMap, &input[last], i - last + 1);
 		// Find whether we have a special char
 		node *specChar = search(HashMap, &input[i], 1);
-
+			
 		// Find whether or not double or single quotes are in the string
-		if (currType == DoubleQuotes) {
+		if (currType == MultiComment) {
+			last = i+1;
+			if (input[i] == '*' && input[i+1] == '/') {
+				currType = None;
+				i++;
+			}
+		} else if (currType == Comment) {
+			last = i+1;
+			if (input[i] == '\n') currType = None;
+		}
+		else if (currType == DoubleQuotes) {
 			if (input[i] == '\"') next = 1;
 		} else if (currType == SingleQuotes) {
 			if (input[i] == '\'') next = 1;
@@ -116,6 +127,19 @@ int main(int argc, char *argv[]){
 		} else if (input[i] == '\'') {
 			if (currType != None) next = 1;
 			else currType = SingleQuotes;
+		} else if (input[i] == '/' && input[i+1] == '*') {
+			if (currType != None) next = 1;
+			else { 
+				currType = MultiComment;
+				i++;
+			}
+		} else if (input[i] == '/' && input[i+1] == '/') {
+			if (currType != None) next = 1;
+			else { 
+				currType = Comment;
+				i++;
+			}
+
 		} else if (isspace(input[i])) {
 			// If current character is whitespace
 			if (currType != None) {
@@ -205,7 +229,7 @@ int main(int argc, char *argv[]){
 			if (!isxdigit(input[i])) next = 1;
 		}
 
-		if (next || input[i+1] == '\0') {
+		if (currType != None && (next || input[i+1] == '\0')) {
 			// Copy relevant info to current node and create a new one
 			if (!next && input[i+1] == '\0') {
 				i++;
