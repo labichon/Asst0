@@ -353,7 +353,8 @@ char* getTypeStr(types type) {
 */
 void printLL(node *head) {
 	for (node *curr = head; curr != NULL; curr = curr -> next) {
-		printf("%s: \"%s\"\n", curr -> value, curr -> key);
+		if (curr -> value != NULL) // Account for last one being null
+			printf("%s: \"%s\"\n", curr -> value, curr -> key);
 	}
 }
 
