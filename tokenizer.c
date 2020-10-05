@@ -36,7 +36,6 @@ int main(int argc, char *argv[]){
 	insert(HashMap, "]", "right bracket");
 	insert(HashMap, ".", "structure member");
 	insert(HashMap, "->", "structure pointer");
-	insert(HashMap, "sizeof", "sizeof");
 	insert(HashMap, ",", "comma");
 	insert(HashMap, "!", "negate");
 	insert(HashMap, "~", "1s complement");
@@ -73,6 +72,16 @@ int main(int argc, char *argv[]){
 	insert(HashMap, "-", "minus/subtract operator");
 	insert(HashMap, "*", "multiply/dereference operator");
 
+	// Insert keywords
+	char *kws[] = {"auto", "double", "int", "struct", "break", "else", "long", 
+                     "switch", "case", "enum", "register", "typedef", "char", 
+		     "extern", "return", "union", "continue", "for", "signed", 
+		     "void", "do", "if", "static", "while", "default", "goto", 
+		     "sizeof", "volatile", "const", "float", "short", "unsigned"};
+	for (int i = 0; i < 32; i++) {
+		insert(HashMap, kws[i], "keyword");
+	}
+
 	// Start list of tokens
 	node *head = (node*) malloc(sizeof(node));
 	head -> key = NULL;
@@ -98,21 +107,13 @@ int main(int argc, char *argv[]){
 
 		// Find whether or not double or single quotes are in the string
 		if (currType == DoubleQuotes) {
-			next = 1;
+			if (input[i] == '\"') next = 1;
 		} else if (currType == SingleQuotes) {
-			next = 1;
+			if (input[i] == '\'') next = 1;
 		} else if (input[i] == '\"') {
 			currType = DoubleQuotes;
-			i++;
-			while (input[i] != '\"') {
-				i++;
-			}
 		} else if (input[i] == '\'') {
 			currType = SingleQuotes;
-			i++;
-			while (input[i] != '\'') {
-				i++;
-			}
 		} else if (isspace(input[i])) {
 			// If current character is whitespace
 			if (currType != None) {
@@ -122,8 +123,16 @@ int main(int argc, char *argv[]){
 			}
 		} else if (special != NULL) {
 			// Found special string sequence
-			curr -> value = special -> value;
-			currType = Special;
+			
+			// If a keyword is followed by alphanum char, treat as a word
+			if (strcmp(special -> value, "keyword") == 0 &&
+                            isalnum(input[i+1])) {
+				currType = Word;
+
+			} else {
+				curr -> value = special -> value;
+				currType = Special;
+			}
 		} else if (currType == None) {
 			// Current type not yet known (new token)
 			// Cases: Special Char, '0', Decimal, Word
