@@ -170,6 +170,7 @@ int main(int argc, char *argv[]){
 		} else if (currType == Word) {
 			if (!isalnum(input[i])) next = 1;
 		}else if (currType == Dec) {
+			printf("%c", input[i]);
 			// Cases: 1) '.' 2) Decimal 3) Non-decimal
 			if (input[i] == '.' && isdigit(input[i+1])) {
 				currType = Float;
@@ -207,7 +208,7 @@ int main(int argc, char *argv[]){
 
 		if (next || input[i+1] == '\0') {
 			// Copy relevant info to current node and create a new one
-			if (input[i+1] == '\0') {
+			if (!next && input[i+1] == '\0') {
 				i++;
 			}	
 
