@@ -1,0 +1,51 @@
+./tokenizer "test case brodie"
+word: "test"
+word: "case"
+word: "brodie"
+
+
+./tokenizer "hexadecimal 0x23"
+word: "hexadecimal"
+hexadecimal integer: "0x23"
+
+
+./tokenizer "12= +,++, += 12.3"
+decimal: "12"
+assignment: "="
+addition: "+"
+comma: ","
+increment: "++"
+comma: ","
+plus equals: "+="
+floating point: "12.3"
+
+
+./tokenizer "barmelo [weezyfbaby12]"
+word: "barmelo"
+left bracket: "["
+word: "weezyfbaby12"
+right bracket: "]"
+
+
+./tokenizer "frank > the weeknd  n 0 ca 12.2"
+word: "frank"
+greater than test: ">"
+word: "the"
+word: "weeknd"
+word: "n"
+decimal: "0"
+word: "ca"
+floating point: "12.2"
+
+
+./tokenizer "'hate to see it'"
+string: "'hate to see it'"
+
+
+./tokenizer "\"hate to see it\""
+string: ""hate to see it""
+
+
+./tokenizer "if"
+keyword: "if"
+
